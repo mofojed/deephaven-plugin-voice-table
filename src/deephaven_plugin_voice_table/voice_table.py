@@ -10,8 +10,6 @@ from .command_decoder import CommandDecoderResults, get_fuzzy_table_operations
 
 logger = logging.getLogger(__name__)
 
-print('logger name', logger.name)
-
 model = whisper.load_model("base")
 
 
