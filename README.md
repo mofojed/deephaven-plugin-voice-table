@@ -2,8 +2,7 @@
 
 This is a Python plugin for Deephaven generated from a [deephaven-plugin](https://github.com/deephaven/deephaven-plugins) template.
 
-Specifically, this plugin is a bidirectional widget plugin, which can send and receive messages on both the client and server.
-The plugin works out of the box, demonstrates basic plugin structure, and can be used as a starting point for building more complex plugins.
+This plugin display a table with a voice control interface. Press and hold the micrphone button, speak a command, and the table will update with the filters and sorts you specified.
 
 ## Plugin Structure
 
@@ -52,7 +51,45 @@ See the [plug-in documentation](https://deephaven.io/core/docs/how-to-guides/use
 
 Once the Deephaven server is running, the plugin should be available to use.
 
-<!-- TODO: Fill in how to use -->
+For a basic example, run the following code:
+
+```python
+from deephaven import new_table
+from deephaven.column import string_col, int_col
+from deephaven_plugin_voice_table import ui_voice_table
+
+_basic_table = new_table(
+    [
+        string_col("First", ["John", "Jane", "John", "Mike", "Jane", "Bob"]),
+        string_col("Last", ["Doe", "Smith", "Cruise", "Smith", "Doe", "Smith"]),
+        int_col("Id", [1, 2, 3, 4, 5, 6])
+    ]
+)
+
+vc_basic_table = ui_voice_table(_basic_table)
+```
+
+A panel should appear with a table and a microphone. Click and hold the microphone, speak a command, and release the microphone to apply the command. Some example commands you could speak:
+
+- Filter a column: "Filter <column> by <value>", e.g. "Filter First by John"
+- Sort a column: "Sort <column> <ascending/descending>", e.g. "Sort First descending"
+- Multiple commands you can separate with "and", e.g. "Filter First by John and Sort Last descending"
+
+![Voice controlled table filtered](./assets/vc_basic_table.png)
+
+For a more complex example, install the `deephaven-plugin-plotly-express` plugin for some extra data sets and run the following:
+
+```python
+from deephaven_plugin_voice_table import ui_voice_table
+import deephaven.plot.express as dx
+
+_stocks = dx.data.stocks()
+
+vc_stocks = ui_voice_table(_stocks)
+```
+
+Say a command like "Filter sym by CAT and filter exchange by PETX and sort size down" to see the table update:
+![Voice controlled stock table filtered and sorted](./assets/vc_stocks.png)
 
 ## Distributing the Plugin
 
